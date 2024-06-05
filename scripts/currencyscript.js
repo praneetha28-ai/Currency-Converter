@@ -1,5 +1,6 @@
 var from;
-var to;
+var to=[];
+
 // function to generate from options
 populateFromOptions();
 
@@ -52,23 +53,19 @@ function populateFromOptions()
         const ulElement1 = document.getElementById('fromList');
         jsonData.forEach(country => 
             {
-                const liElement = document.createElement('li');
-                const anchorElement = document.createElement('a');
-                anchorElement.classList.add('dropdown-item');
-                anchorElement.href = '#';
-                anchorElement.id = country['currency_code'];
-                anchorElement.textContent = country['country']+'- '+country['currency_code'];;
-                liElement.appendChild(anchorElement);
-                ulElement1.appendChild(liElement);
+                const optionElement = document.createElement('option');
+                optionElement.value = country['currency_code'];
+                optionElement.textContent = country['country'] + ' - ' + country['currency_code'];
+                ulElement1.appendChild(optionElement);
             });
-            document.querySelectorAll('#fromList .dropdown-item').forEach(item => {
-            item.addEventListener('click', event => 
-            {
-                document.getElementById('inputValue1').value = event.target.textContent;
-                from = event.target.id;
+            ulElement1.addEventListener('change', event => {
+                const selectedOption = event.target.options[event.target.selectedIndex];
+                console.log(selectedOption);
+                // document.getElementById('inputValue1').value = selectedOption.textContent;
+                from = selectedOption.value;
+                console.log(from);
                 calculate();
             });
-        });
     });
     
 }
@@ -82,42 +79,54 @@ function populateToOptions()
         const ulElement1 = document.getElementById('toList');
         jsonData.forEach(country => 
             {
-                const liElement = document.createElement('li');
-                const anchorElement = document.createElement('a');
-                anchorElement.classList.add('dropdown-item');
-                anchorElement.href = '#';
-                anchorElement.id = country['currency_code'];
-                anchorElement.textContent = country['country']+'- '+country['currency_code'];
-                liElement.appendChild(anchorElement);
-                ulElement1.appendChild(liElement);
+                const optionElement = document.createElement('option');
+                optionElement.value = country['currency_code'];
+                optionElement.textContent = country['country'] + ' - ' + country['currency_code'];
+                ulElement1.appendChild(optionElement);
             });
-            document.querySelectorAll('#toList .dropdown-item').forEach(item => {
-            item.addEventListener('click', event => 
-            {
-                document.getElementById('inputValue2').value = event.target.textContent;
-                to = event.target.id;
+            ulElement1.addEventListener('change', event => {
+                const selectedOption = event.target.selectedOptions;
+                
+                console.log(selectedOption);
+                // document.getElementById('inputValue2').value = selectedOption.textContent;
+                var toList = []
+                for(var i =0 ;i<selectedOption.length;i++)
+                    {
+                        toList.push(selectedOption[i].value);
+                    }
+                to = toList;
+                console.log(to);
                 calculate();
             });
-        });
     });
     
 }
 
+
 function calculate()
 {
+    document.getElementById("result").innerHTML="";
     fetch('datafiles/exchangeRates.json').
     then((response)=>response.json()).
     then
     (
         (json)=>
         {
-            // console.log(json);
+            console.log(from);
             var amount = document.getElementById("inputAmount").value;
-            var inputToDollar = amount/json['rates'][from];
-            var dollarToOputput = inputToDollar* json['rates'][to];
-            var rounded  =  dollarToOputput.toFixed(2);
-            var result  = amount+' '+from+ ' = '+ rounded+' '+ to;
-            document.getElementById("result").innerHTML = rounded == "NaN"?"" : result;
+            if(from && to && amount)
+            {
+                var inputToDollar = amount/json['rates'][from];
+                var result="" ;
+                for(var i = 0 ;i<to.length;i++)
+                {
+                    var dollarToOputput = inputToDollar* json['rates'][to[i]];
+                    var rounded  =  dollarToOputput.toFixed(2);
+                    result += amount+' '+from+ ' = '+ rounded+' '+ to[i];
+                    result+="<br><hr>";
+                }
+                document.getElementById("result").innerHTML = rounded == "NaN"?"" : result;
+            }
         }
     )
 }

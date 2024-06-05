@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Audiowide">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.0.1/dist/css/multi-select-tag.css">
+    <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.0.1/dist/js/multi-select-tag.js"></script>
     <title>Currency Converter V2</title>
 </head>
 <body>
@@ -27,72 +28,37 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default" style="background-color: #B3C8CF; font-family: 'Trirong', serif;">Amount</span>
                 </div>
-                <input type="number" class="form-control"  onkeyup="calculate()" id="inputAmount" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                <input type="text" class="form-control" onkeypress="if ( isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"  onkeyup="calculate()" id="inputAmount" aria-label="Default" aria-describedby="inputGroup-sizing-default">
             </div>
             <div class="from-to d-flex">
                 <div class="input-group mb-3 " style="margin-right: 5px;">
-                    <input type="text" class="form-control" aria-label="Default" id="inputValue1"
-                     aria-describedby="inputGroup-sizing-default" readonly>
+                    <!-- <input type="text" class="form-control" aria-label="Default" id="inputValue1"
+                     aria-describedby="inputGroup-sizing-default" readonly> -->
                     <div class="input-group-prepend">
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" style="background-color: #B3C8CF;border: #B3C8CF;color: black; font-family: 'Trirong', serif;" data-bs-toggle="dropdown" aria-expanded="false">
-                              From
-                            </button>
-                            <ul class="dropdown-menu" id="fromList" style="height: 300px;overflow: scroll;">
-                                <li>
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text" id="basic-addon1"><img src="assets/search.png" alt="" style="width: 20px;height: 20px;"></span>
-                                        <input type="text" class="form-control" onkeyup="searchFrom()"  id="searchforFrom" placeholder="Search..." aria-label="Username" aria-describedby="basic-addon1">
-                                    </div>
-                                </li>
-
-                                <!-- <li><a class="dropdown-item" href="#" id="AFN">AFGHANISTAN</a></li>
-                                <li><a class="dropdown-item" href="#" id="AUD">AUSTRALIA</a></li>
-                                <li><a class="dropdown-item" href="#" id="BDT">BANGLADESH</a></li>
-                                <li><a class="dropdown-item" href="#" id="INR">INDIA</a></li>
-                                <li><a class="dropdown-item" href="#" id="USD">UNITED STATES OF AMERICA</a></li>
-                                <li><a class="dropdown-item" href="#" id="LKR">SRI LANKA</a></li>
-                                <li><a class="dropdown-item" href="#" id="KPW">North KOREA</a></li>
-                                <li><a class="dropdown-item" href="#" id="EUR">SPAIN</a></li> -->
-                            </ul>
-                        </div>                 
+                        <select   class="form-select" id="fromList" aria-label="Default select example">
+                            <option >From</option>
+                        </select>
                     </div>
                 </div>
                 <div class="input-group mb-3 ml-3"  style="margin-left: 5px;">
-                    <input type="text" class="form-control" readonly id="inputValue2" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                    <!-- <input type="text" class="form-control" readonly id="inputValue2" aria-label="Default" aria-describedby="inputGroup-sizing-default"> -->
                     <div class="input-group-prepend">
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button"  style="background-color: #B3C8CF;border: #B3C8CF;color: black; font-family: 'Trirong', serif;" data-bs-toggle="dropdown" aria-expanded="false" value="">
-                              To
-                            </button>
-                            <ul class="dropdown-menu" id="toList" style="height: 300px;overflow: scroll;">
-                                <li>
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text" id="basic-addon1"><img src="assets/search.png" alt="" style="width: 20px;height: 20px;"></span>
-                                        <input type="text" class="form-control" onkeyup="searchTo()"  id="searchforTo" placeholder="Search..." aria-label="Username" aria-describedby="basic-addon1">
-                                    </div>
-                                </li>
-                                <!-- <li><a class="dropdown-item" href="#" id="AFN">AFGHANISTAN</a></li>
-                                <li><a class="dropdown-item" href="#" id="AUD">AUSTRALIA</a></li>
-                                <li><a class="dropdown-item" href="#" id="BDT">BANGLADESH</a></li>
-                                <li><a class="dropdown-item" href="#" id="INR">INDIA</a></li>
-                                <li><a class="dropdown-item" href="#" id="USD">UNITED STATES OF AMERICA</a></li>
-                                <li><a class="dropdown-item" href="#" id="LKR">SRI LANKA</a></li>
-                                <li><a class="dropdown-item" href="#" id="KPW">North KOREA</a></li>
-                                <li><a class="dropdown-item" href="#" id="EUR">SPAIN</a></li> -->
-                            </ul>
-                        </div>                      
+                        <select size=9 multiple multiselect-search="true" multiselect-max-items="10" data-placeholder="select" class="form-select" id="toList" aria-label="Default select example">
+                            <!-- <option disabled>To</option> -->
+                        </select>
                     </div>
                 </div>
             </div>
-            <!-- <div class="conv-reset d-flex" style="justify-content: space-evenly;margin-top: 25px;">
-                <button type="button" id="convertBtn" class="btn btn-primary" style=" font-family: 'Trirong', serif;background-color: #B3C8CF;border: #B3C8CF;color: #000;width: 200px;">Convert</button>
-                <button type="button" class="btn btn-primary" style=" font-family: 'Trirong', serif;background-color: #B3C8CF;border: #B3C8CF;color: #000;width: 200px;">Reset</button>
-            </div> -->
-            <h3 style="text-align: center;margin-top: 35px; font-family: 'Audiowide', sans-serif;" id="result"></h3>
+            
         </div>
+       
     </div>
-    <script src="scripts/currency_script.js"></script>
+    <div style="margin: 8px;height: 500px;overflow: scroll;">
+        <h3 style="text-align: center;margin-top: 75px; font-family: 'Audiowide', sans-serif;" id="result"></h3>
+    </div>
+    <script src="scripts/multiselect-dropdown.js"></script>
+
+    <script src="scripts/currencyscript.js"></script>
     <script src="scripts/currentrates.js"></script>
 </body>
 </html>
